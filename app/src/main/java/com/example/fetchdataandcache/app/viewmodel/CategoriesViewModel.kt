@@ -37,6 +37,6 @@ class CategoriesViewModel constructor(private val repository: CategoryRepo) : Vi
     }
 
     private fun getAllCategoriesOffline(): LiveData<List<CategoriesItem>>? = repository.getCategoriesOffline()
-    fun getTheFirstCategory() : String? =  repository.getFirstCategory().strCategory
+    fun getFirstCatagoryThumb() : String? =  repository.getFirstCategory().strCategoryThumb
 }
 

@@ -1,5 +1,7 @@
 package com.example.fetchdataandcache.app.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
@@ -17,6 +19,12 @@ import com.example.fetchdataandcache.app.viewmodel.CategoriesViewModelFactory
 import com.example.fetchdataandcache.data.remote.ApiService.Companion.getInstance
 import com.example.fetchdataandcache.data.repo.CategoryRepo
 import com.example.fetchdataandcache.databinding.ActivityMainBinding
+import com.facebook.CallbackManager
+import com.facebook.FacebookSdk
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.model.ShareModel
+
+import com.facebook.share.widget.ShareDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -27,11 +35,16 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: CategoriesViewModel
     lateinit var catAdapter: CategoryAdapter
+    lateinit var shareDialog: ShareDialog
+    lateinit var callbackManager: CallbackManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        FacebookSdk.sdkInitialize(applicationContext)
+        callbackManager = CallbackManager.Factory.create()
+        shareDialog = ShareDialog()
         initAndSetupRecyView()
         initShareingB()
     }
@@ -43,7 +56,24 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private fun shareData() {
 
-        Toast.makeText(baseContext,getString(R.string.sharing_Toast_msg) + viewModel.getTheFirstCategory(),Toast.LENGTH_LONG).show()
+        //the code will share the first catagory thumb
+
+        val linkContent = ShareLinkContent.Builder()
+            .setContentUrl(Uri.parse(viewModel.getFirstCatagoryThumb()))
+            .setQuote("Category Image")
+            .build()
+
+        if (ShareDialog.canShow(ShareLinkContent::class.java)) {
+            shareDialog.show(linkContent)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        // call the SDK's callbackManager in your onActivityResult to handle the response
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+
     }
 
     private fun initAndSetupRecyView() {
