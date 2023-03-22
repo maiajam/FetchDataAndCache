@@ -1,0 +1,2 @@
+rootProject.name = "FetchDataAndCache"
+include ':app'

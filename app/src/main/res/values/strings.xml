@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FetchDataAndCache</string>
+    <string name="sharing_Toast_msg">The First Category to share is \u0020  </string>
+</resources>
